@@ -548,7 +548,8 @@ static NSMutableDictionary *allVariables;
     
     [self.commandDelegate runInBackground:^{
         BOOL isOptOut = [[command argumentAtIndex:0] boolValue];
-        [clevertap setOptOut:isOptOut];
+        BOOL allowSystemEvents = [[command argumentAtIndex:1]boolValue];
+        [clevertap setOptOut:isOptOut allowSystemEvents: allowSystemEvents];
     }];
 }
 
@@ -1457,7 +1458,7 @@ static NSMutableDictionary *allVariables;
 
 - (void)setLibrary {
     NSString *libName = @"Cordova";
-    int libVersion = 40100;
+    int libVersion = 40200;
     [clevertap setLibrary:libName];
     [clevertap setCustomSdkVersion:libName version:libVersion];
 }
