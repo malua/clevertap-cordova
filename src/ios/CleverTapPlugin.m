@@ -809,7 +809,7 @@ static NSMutableDictionary *allVariables;
             id prop = [clevertap profileGet:propertyName];
             
             if(prop == nil) {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:NO];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
             }
             
             else if([prop isKindOfClass:[NSString class]]) {
@@ -1458,7 +1458,7 @@ static NSMutableDictionary *allVariables;
 
 - (void)setLibrary {
     NSString *libName = @"Cordova";
-    int libVersion = 40200;
+    int libVersion = 40300;
     [clevertap setLibrary:libName];
     [clevertap setCustomSdkVersion:libName version:libVersion];
 }
