@@ -1032,18 +1032,27 @@ CleverTap.prototype.fetchInApps = function(successCallback){
 }
 
 
-function convertDateToEpochInProperties(items){
-//Conversion of date object in suitable CleverTap format
-
-    /*-------------- * -----------------
-    |  input        =>        output    |
-    * --------------------------------- *
-    | new Date()    =>     $D_epoch     |
-    ---------------- * ----------------- */
-    for (let [key, value] of Object.entries(items)) {
+function convertDateToEpochInProperties(items) {
+    /**
+     * Conversion of date object in suitable CleverTap format(Epoch)
+     * Recursively handles nested objects and arrays
+     */
+    if (items) {
+        for (let [key, value] of Object.entries(items)) {
             if (Object.prototype.toString.call(value) === '[object Date]') {
-                items[key] = "$D_" + Math.floor(value.getTime()/1000);
+                items[key] = "$D_" + Math.floor(value.getTime() / 1000);
+            } else if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+                convertDateToEpochInProperties(value);
+            } else if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    if (Object.prototype.toString.call(item) === '[object Date]') {
+                        value[index] = "$D_" + Math.floor(item.getTime() / 1000);
+                    } else if (item !== null && typeof item === 'object') {
+                        convertDateToEpochInProperties(item);
+                    }
+                });
             }
+        }
     }
 }
 
