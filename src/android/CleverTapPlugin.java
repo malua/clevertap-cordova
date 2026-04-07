@@ -107,7 +107,7 @@ public class CleverTapPlugin extends CordovaPlugin implements SyncListener, InAp
         cleverTap.registerPushPermissionNotificationResponseListener(this);
 
         String libName = "Cordova";
-        int libVersion = 40300;
+        int libVersion = 40400;
         cleverTap.setLibrary(libName);
         cleverTap.setCustomSdkVersion(libName, libVersion);
 
@@ -1155,10 +1155,26 @@ public class CleverTapPlugin extends CordovaPlugin implements SyncListener, InAp
         });
     }
 
-    private void discardInAppNotifications(CallbackContext callbackContext) {
+    private void discardInAppNotifications(JSONArray args, CallbackContext callbackContext) {
+        executeWithArgs(args, callbackContext, (arguments) -> {
+            boolean dismissInAppIfVisible = arguments.optBoolean(0, false);
+            cordova.getThreadPool().execute(() -> {
+                cleverTap.discardInAppNotifications(dismissInAppIfVisible);
+                sendPluginResult(callbackContext, Status.NO_RESULT);
+            });
+        });
+    }
+
+    private void variants(CallbackContext callbackContext) {
         cordova.getThreadPool().execute(() -> {
-            cleverTap.discardInAppNotifications();
-            sendPluginResult(callbackContext, Status.NO_RESULT);
+            List<Map<String, Object>> variantsList = cleverTap.variants();
+            JSONArray result = new JSONArray();
+            if (variantsList != null) {
+                for (Map<String, Object> variantMap : variantsList) {
+                    result.put(new JSONObject(variantMap));
+                }
+            }
+            sendPluginResult(callbackContext, Status.OK, result);
         });
     }
 
@@ -1782,7 +1798,7 @@ public class CleverTapPlugin extends CordovaPlugin implements SyncListener, InAp
                 suspendInAppNotifications(callbackContext);
                 return true;
             case DISCARD_IN_APP_NOTIFICATIONS:
-                discardInAppNotifications(callbackContext);
+                discardInAppNotifications(args, callbackContext);
                 return true;
             case RESUME_IN_APP_NOTIFICATIONS:
                 resumeInAppNotifications(callbackContext);
@@ -1887,6 +1903,9 @@ public class CleverTapPlugin extends CordovaPlugin implements SyncListener, InAp
                 executeCustomTemplateToString(callbackContext, args);
                 return true;
             }
+            case VARIANTS:
+                variants(callbackContext);
+                return true;
             default: {
                 sendPluginResult(callbackContext, Status.ERROR, "unhandled CleverTapPlugin action");
             }

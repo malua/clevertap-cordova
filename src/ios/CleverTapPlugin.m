@@ -482,8 +482,21 @@ static NSMutableDictionary *allVariables;
     [clevertap suspendInAppNotifications];
 }
 
-- (void)discardInAppNotifications {
-    [clevertap discardInAppNotifications];
+- (void)discardInAppNotifications:(CDVInvokedUrlCommand *)command {
+    BOOL dismissInAppIfVisible = NO;
+    id arg = [command argumentAtIndex:0 withDefault:@NO];
+    if (arg != nil && [arg isKindOfClass:[NSNumber class]]) {
+        dismissInAppIfVisible = [arg boolValue];
+    }
+    [clevertap discardInAppNotifications:dismissInAppIfVisible];
+}
+
+- (void)variants:(CDVInvokedUrlCommand *)command {
+    [self.commandDelegate runInBackground:^{
+        NSArray *variants = [clevertap variants];
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:variants ?: @[]];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
 }
 
 - (void)resumeInAppNotifications {

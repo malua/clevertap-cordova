@@ -562,9 +562,11 @@ CleverTap.prototype.suspendInAppNotifications = function () {
 
 /**
  Discards inApp notifications until 'resumeInAppNotifications' is called for current session.
- Automatically resumes InApp notifications display on CleverTap shared instance creation. Pending inApp notifications are not displayed. */
-CleverTap.prototype.discardInAppNotifications = function () {
-    cordova.exec(null, null, "CleverTapPlugin", "discardInAppNotifications", []);
+ Automatically resumes InApp notifications display on CleverTap shared instance creation. Pending inApp notifications are not displayed.
+ @param {boolean} dismissInAppIfVisible - Optional. If true, also dismisses the currently visible InApp notification.
+ */
+CleverTap.prototype.discardInAppNotifications = function (dismissInAppIfVisible) {
+    cordova.exec(null, null, "CleverTapPlugin", "discardInAppNotifications", [dismissInAppIfVisible === true]);
 }
 
 /**
@@ -746,6 +748,15 @@ Get all variables via a JSON object.
 */
 CleverTap.prototype.getVariables = function (successCallback) {
     cordova.exec(successCallback, null, "CleverTapPlugin", "getVariables", []);
+}
+
+/**
+ Returns information about the active A/B experiment variants for the current user.
+ Each variant object contains an "id" key mapping to the numeric ID of the variant.
+ @param {function} successCallback - Callback that receives an array of variant objects.
+ */
+CleverTap.prototype.variants = function (successCallback) {
+    cordova.exec(successCallback, null, "CleverTapPlugin", "variants", []);
 }
 
  /**
