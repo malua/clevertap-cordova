@@ -1,6 +1,6 @@
 Change Log
 ==========
-Version 5.0.0 *(April 15 2026)*
+Version 5.0.0 *(April 29 2026)*
 -------------------------------------------
 **What's new**
 * **[Android Platform]**
@@ -14,6 +14,10 @@ Version 5.0.0 *(April 15 2026)*
     * Adds new `variants(successCallback)` API to fetch the active A/B experiment variants for the current user. Each variant object contains an `"id"` key mapping to the numeric ID of the variant.
     * Updates `discardInAppNotifications()` with an optional boolean parameter `dismissInAppIfVisible`. When `true`, immediately dismisses any currently visible In-App notification in addition to clearing the pending queue.
         * `discardInAppNotifications(dismissInAppIfVisible)`
+
+**Bug Fixes**
+* **[iOS Platform]**
+    * Fixes a bug where onUserLogin was creating additional guids only for encryption level high.
 
 Version 4.3.0 *(October 8 2025)*
 -------------------------------------------
