@@ -759,6 +759,14 @@ CleverTap.prototype.variants = function (successCallback) {
     cordova.exec(successCallback, null, "CleverTapPlugin", "variants", []);
 }
 
+/**
+ Clears any active mute state set by the backend, allowing the SDK to resume
+ normal event tracking and network operations immediately.
+ */
+CleverTap.prototype.unmute = function (successCallback) {
+    cordova.exec(successCallback, null, "CleverTapPlugin", "unmute", []);
+}
+
  /**
 Adds a callback to be invoked when variables are initialised with server values. Will be called each time new values are fetched.
 @param {function} handler The callback to add

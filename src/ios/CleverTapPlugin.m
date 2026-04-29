@@ -1476,6 +1476,11 @@ static NSMutableDictionary *allVariables;
     [clevertap setCustomSdkVersion:libName version:libVersion];
 }
 
+- (void)unmute {
+    [self.commandDelegate runInBackground:^{
+        [clevertap unmute];
+    }];
+}
 
 #pragma mark Product Config Delegate
 
