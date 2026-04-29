@@ -125,6 +125,7 @@ public enum CleverTapFunction {
     CUSTOM_TEMPLATE_GET_OBJECT_ARG("customTemplateGetObjectArg"),
     CUSTOM_TEMPLATE_CONTEXT_TO_STRING("customTemplateContextToString"),
     VARIANTS("variants"),
+    UNMUTE("unmute"),
 
     CLEVERTAP_UNKNOWN("cleverTapUnknown");
 

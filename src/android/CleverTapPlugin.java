@@ -1178,6 +1178,13 @@ public class CleverTapPlugin extends CordovaPlugin implements SyncListener, InAp
         });
     }
 
+    private void unmute(CallbackContext callbackContext) {
+        cordova.getThreadPool().execute(() -> {
+            cleverTap.unmute();
+            sendPluginResult(callbackContext, Status.NO_RESULT);
+        });
+    }
+
     private void resumeInAppNotifications(CallbackContext callbackContext) {
         cordova.getThreadPool().execute(() -> {
             cleverTap.resumeInAppNotifications();
@@ -1905,6 +1912,10 @@ public class CleverTapPlugin extends CordovaPlugin implements SyncListener, InAp
             }
             case VARIANTS:
                 variants(callbackContext);
+                return true;
+
+            case UNMUTE:
+                unmute(callbackContext);
                 return true;
             default: {
                 sendPluginResult(callbackContext, Status.ERROR, "unhandled CleverTapPlugin action");
