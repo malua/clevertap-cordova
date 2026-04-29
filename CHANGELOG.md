@@ -14,6 +14,7 @@ Version 5.0.0 *(April 30 2026)*
     * Adds new `variants(successCallback)` API to fetch the active A/B experiment variants for the current user. Each variant object contains an `"id"` key mapping to the numeric ID of the variant.
     * Updates `discardInAppNotifications()` with an optional boolean parameter `dismissInAppIfVisible`. When `true`, immediately dismisses any currently visible In-App notification in addition to clearing the pending queue.
         * `discardInAppNotifications(dismissInAppIfVisible)`
+    * Adds new `unmute()` API to resumes event tracking, overriding any active mute period.
 
 **Bug Fixes**
 * **[iOS Platform]**
