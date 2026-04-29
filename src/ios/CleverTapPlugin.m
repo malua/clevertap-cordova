@@ -1476,7 +1476,7 @@ static NSMutableDictionary *allVariables;
     [clevertap setCustomSdkVersion:libName version:libVersion];
 }
 
-- (void)unmute {
+- (void)unmute:(CDVInvokedUrlCommand *)command {
     [self.commandDelegate runInBackground:^{
         [clevertap unmute];
     }];

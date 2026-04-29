@@ -56,7 +56,7 @@ static NSString * const CTSendEvent = @"CTSendEvent";
  Clears any active mute state set by the backend, allowing the SDK to resume
  normal event tracking and network operations immediately.
  */
-- (void)unmute;
+- (void)unmute:(CDVInvokedUrlCommand *)command;
 
 #pragma mark - OptOut API
 
