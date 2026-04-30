@@ -562,9 +562,11 @@ CleverTap.prototype.suspendInAppNotifications = function () {
 
 /**
  Discards inApp notifications until 'resumeInAppNotifications' is called for current session.
- Automatically resumes InApp notifications display on CleverTap shared instance creation. Pending inApp notifications are not displayed. */
-CleverTap.prototype.discardInAppNotifications = function () {
-    cordova.exec(null, null, "CleverTapPlugin", "discardInAppNotifications", []);
+ Automatically resumes InApp notifications display on CleverTap shared instance creation. Pending inApp notifications are not displayed.
+ @param {boolean} dismissInAppIfVisible - Optional. If true, also dismisses the currently visible InApp notification.
+ */
+CleverTap.prototype.discardInAppNotifications = function (dismissInAppIfVisible) {
+    cordova.exec(null, null, "CleverTapPlugin", "discardInAppNotifications", [dismissInAppIfVisible === true]);
 }
 
 /**
@@ -746,6 +748,23 @@ Get all variables via a JSON object.
 */
 CleverTap.prototype.getVariables = function (successCallback) {
     cordova.exec(successCallback, null, "CleverTapPlugin", "getVariables", []);
+}
+
+/**
+ Returns information about the active A/B experiment variants for the current user.
+ Each variant object contains an "id" key mapping to the numeric ID of the variant.
+ @param {function} successCallback - Callback that receives an array of variant objects.
+ */
+CleverTap.prototype.variants = function (successCallback) {
+    cordova.exec(successCallback, null, "CleverTapPlugin", "variants", []);
+}
+
+/**
+ Clears any active mute state set by the backend, allowing the SDK to resume
+ normal event tracking and network operations immediately.
+ */
+CleverTap.prototype.unmute = function () {
+    cordova.exec(null, null, "CleverTapPlugin", "unmute", []);
 }
 
  /**
@@ -1021,18 +1040,27 @@ CleverTap.prototype.fetchInApps = function(successCallback){
 }
 
 
-function convertDateToEpochInProperties(items){
-//Conversion of date object in suitable CleverTap format
-
-    /*-------------- * -----------------
-    |  input        =>        output    |
-    * --------------------------------- *
-    | new Date()    =>     $D_epoch     |
-    ---------------- * ----------------- */
-    for (let [key, value] of Object.entries(items)) {
+function convertDateToEpochInProperties(items) {
+    /**
+     * Conversion of date object in suitable CleverTap format(Epoch)
+     * Recursively handles nested objects and arrays
+     */
+    if (items) {
+        for (let [key, value] of Object.entries(items)) {
             if (Object.prototype.toString.call(value) === '[object Date]') {
-                items[key] = "$D_" + Math.floor(value.getTime()/1000);
+                items[key] = "$D_" + Math.floor(value.getTime() / 1000);
+            } else if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+                convertDateToEpochInProperties(value);
+            } else if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    if (Object.prototype.toString.call(item) === '[object Date]') {
+                        value[index] = "$D_" + Math.floor(item.getTime() / 1000);
+                    } else if (item !== null && typeof item === 'object') {
+                        convertDateToEpochInProperties(item);
+                    }
+                });
             }
+        }
     }
 }
 
