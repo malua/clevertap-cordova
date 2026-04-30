@@ -763,8 +763,8 @@ CleverTap.prototype.variants = function (successCallback) {
  Clears any active mute state set by the backend, allowing the SDK to resume
  normal event tracking and network operations immediately.
  */
-CleverTap.prototype.unmute = function (successCallback) {
-    cordova.exec(successCallback, null, "CleverTapPlugin", "unmute", []);
+CleverTap.prototype.unmute = function () {
+    cordova.exec(null, null, "CleverTapPlugin", "unmute", []);
 }
 
  /**
