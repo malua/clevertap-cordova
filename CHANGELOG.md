@@ -5,6 +5,7 @@ Version 5.0.0 *(April 30 2026)*
 **What's new**
 * **[Android Platform]**
     * Supports [CleverTap Android SDK v8.1.0](https://github.com/CleverTap/clevertap-android-sdk/blob/master/docs/CTCORECHANGELOG.md#version-810-april-17-2026).
+    * Bumps the minimum supported Android API level from 21 (Android 5.0) to 23 (Android 6.0).
 
 * **[iOS Platform]**
     * Supports [CleverTap iOS SDK v7.6.0](https://github.com/CleverTap/clevertap-ios-sdk/blob/master/CHANGELOG.md#version-760-april-17-2026).
