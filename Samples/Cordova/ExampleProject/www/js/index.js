@@ -87,7 +87,11 @@ function setupButtons() {
        }
       ],
       ["getVariables", () => {
-         CleverTap.getVariables(val => log("getVariables value is "+val.cordova_var_map.cordova_var_map_nested.cordova_var_map_nested_float));
+         CleverTap.getVariables(val => {
+           log("getVariables = " + JSON.stringify(val));
+           log("nested: cordova_var_map.cordova_var_map_nested = " + JSON.stringify(val.cordova_var_map.cordova_var_map_nested));
+           log("deeply nested float = " + val.cordova_var_map.cordova_var_map_nested.cordova_var_map_nested_float);
+         });
        }
       ],
       ["onVariablesChanged", () => {
@@ -102,6 +106,13 @@ function setupButtons() {
      ["onFileValueChanged", () => {
         let key = prompt("Please enter key", "folder1");
         CleverTap.onFileValueChanged(key,val => log("onFileValueChanged value is "+JSON.stringify(val)));
+      }
+     ],
+
+     ["variants", () => {
+        CleverTap.variants(val => {
+          log("variants = " + JSON.stringify(val));
+        });
       }
      ],
 
@@ -125,6 +136,37 @@ function setupButtons() {
             CleverTap.recordEventWithName(eventName)}],
         ["set Locale", () => CleverTap.setLocale("en_IN")],
         ["record Event With NameAndProps", () => CleverTap.recordEventWithNameAndProps("boo", {"bar": "zoo"})],
+        ["record Event With Nested Properties", () => {
+            const eventProps = {
+                'Product Name': 'Premium Subscription',
+                'Amount': 99.99,
+                'Currency': 'USD',
+                'Payment Details': {
+                    method: 'credit_card',
+                    provider: 'Stripe',
+                    cardType: 'Visa',
+                    lastFourDigits: '4242',
+                    billingAddress: {
+                        street: '456 Market St',
+                        city: 'New York',
+                        state: 'NY',
+                        zipCode: 10001
+                    }
+                },
+                'User Metadata': {
+                    isPremium: true,
+                    tier: 'gold',
+                    features: ['feature1', 'feature2', 'feature3'],
+                    limits: {
+                        apiCalls: 10000,
+                        storage: 100
+                    }
+                },
+                'timestamp': new Date()
+            };
+            log('Recording event with nested properties: ', JSON.stringify(eventProps));
+            CleverTap.recordEventWithNameAndProps('Product Purchased', eventProps);
+        }],
         ["record Charged Event With Details And Items", () => CleverTap.recordChargedEventWithDetailsAndItems({
             "amount": 300,
             "Charged ID": 1234
@@ -141,6 +183,63 @@ function setupButtons() {
             let key = prompt("Please enter key", "stringAttr1");
             let value = prompt("Please enter value for " + key, "newValue");
             CleverTap.profileSet({"Identity": 20701, "DOB": "1951-10-15", "custom": 1.3, [key]: value})}],
+        ["profile Set with Nested Properties", () => {
+            const profile = {
+                Name: 'testUserNested',
+                Identity: '123456',
+                Email: 'nested@test.com',
+                JoiningDate: new Date('2025-03-03T06:35:31'),
+                Address: {
+                    street: '123 Main St',
+                    city: 'San Francisco',
+                    state: 'CA',
+                    zipCode: 94105,
+                    coordinates: {
+                        lat: 37.7749,
+                        lng: -122.4194
+                    }
+                },
+                Preferences: {
+                    newsletter: true,
+                    notifications: {
+                        email: true,
+                        push: false,
+                        sms: true
+                    },
+                    subscriptionDate: new Date('2026-03-03T06:35:31'),
+                    categories: ['sports', 'tech', 'news'],
+                    dateProps: [new Date('2025-03-03T06:35:31'), new Date('2026-03-03T06:35:31'), new Date('2025-03-03T06:35:31')]
+                }
+            };
+            log('Profile Set with nested properties: ', JSON.stringify(profile));
+            CleverTap.profileSet(profile);
+        }],
+        ["onUserLogin with Nested Properties", () => {
+            const profile = {
+                Name: 'testUserLogin',
+                Identity: new Date().getTime() + '',
+                Email: new Date().getTime() + 'logintest@test.com',
+                Company: {
+                    name: 'TechCorp',
+                    department: 'Engineering',
+                    role: 'Senior Developer',
+                    location: {
+                        office: 'HQ',
+                        floor: 5
+                    }
+                },
+                Settings: {
+                    theme: 'dark',
+                    language: 'en',
+                    privacy: {
+                        shareData: false,
+                        analytics: true
+                    }
+                }
+            };
+            log('OnUserLogin with nested properties: ', JSON.stringify(profile));
+            CleverTap.onUserLogin(profile);
+        }],
 
         ["profile Set with Random Identity", () => {
             let key = prompt("Please enter key", "stringAttr1");
@@ -175,6 +274,7 @@ function setupButtons() {
         ["suspend InApp Notifications", () => CleverTap.suspendInAppNotifications()],
         ["resume InApp Notifications", () => CleverTap.resumeInAppNotifications()],
         ["discard InApp Notifications", () => CleverTap.discardInAppNotifications()],
+        ["discard InApp Notifications (dismiss visible)", () => CleverTap.discardInAppNotifications(true)],
 
         ["title","Notification Channel"],
         ["create notification channel GSTTesting", ()=> CleverTap.createNotificationChannel("GSTTesting", "GSTTesting", "", 5, true)],
